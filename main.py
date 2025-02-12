@@ -43,5 +43,22 @@ def job_on_languages():
         languages_count[language] = vacancies
     print(languages_count)
 
+def predict_rub_salary(vacancy):
+    url = 'https://api.hh.ru/vacancies'
+    payload = {
+        'text': vacancy,
+        'area': '1',
+        'period': '30',
+    }
+    response = requests.get(url, params=payload)
+    response.raise_for_status()
+    vacancies = response.json()['items']
+    for vacancy in vacancies:
+        salary = vacancy.get('salary')
+        if salary:
+            print(salary)
+        else:
+            print(None)
+
 if __name__ == '__main__':
-    job_on_languages()
+    predict_rub_salary('программист Python')
