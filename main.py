@@ -49,16 +49,21 @@ def predict_rub_salary(vacancy):
         'text': vacancy,
         'area': '1',
         'period': '30',
+        'per_page': 20
     }
     response = requests.get(url, params=payload)
     response.raise_for_status()
     vacancies = response.json()['items']
-    for vacancy in vacancies:
-        salary = vacancy.get('salary')
-        if salary:
-            print(salary)
-        else:
+    for salary in vacancies:
+        salary = salary['salary']
+        if salary is None:
             print(None)
+        elif salary['currency'] != 'RUR':
+            print(None)
+        elif (salary['from'] is not None) and (salary['to'] is not None):
+            print((salary['from']+salary['to'])/2)
+        else:
+            print(salary['from'])
 
 if __name__ == '__main__':
     predict_rub_salary('программист Python')
